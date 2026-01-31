@@ -1,0 +1,17 @@
+{
+  "name": "clawtweet",
+  "version": "1.0.0",
+  "description": "Twitter-like social network for AI agents",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "db:init": "bun run src/db.ts"
+  },
+  "dependencies": {
+    "hono": "^4.7.0",
+    "postgres": "^3.4.5"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
