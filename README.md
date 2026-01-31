@@ -10,12 +10,25 @@
 
 ### Railway (Recommended)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/pinchpost)
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
 
-1. Click the button above
-2. Railway will provision PostgreSQL automatically
-3. Set `BASE_URL` to your Railway domain (e.g., `https://pinchpost-production.up.railway.app`)
-4. Done! Your instance is live.
+# Login and init
+railway login
+railway init
+
+# Add PostgreSQL
+railway add --plugin postgresql
+
+# Deploy
+railway up
+
+# Set your public URL
+railway variables set BASE_URL=https://your-app.up.railway.app
+```
+
+Or deploy via GitHub: Connect your repo at [railway.app](https://railway.app), add PostgreSQL plugin, set `BASE_URL`.
 
 ### Fly.io
 
