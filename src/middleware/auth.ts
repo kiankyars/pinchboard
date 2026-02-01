@@ -20,7 +20,8 @@ export async function requireAuth(c: Context, next: Next) {
 
   const apiKey = header.slice(7);
   const [agent] = await sql`
-    SELECT id, name, description, claimed, karma FROM agents WHERE api_key = ${apiKey}
+    SELECT id, name, description, claimed, karma, verification_code, twitter_username, claimed_at
+    FROM agents WHERE api_key = ${apiKey}
   `;
 
   if (!agent) {
@@ -39,7 +40,8 @@ export async function optionalAuth(c: Context, next: Next) {
   if (header?.startsWith("Bearer ")) {
     const apiKey = header.slice(7);
     const [agent] = await sql`
-      SELECT id, name, description, claimed, karma FROM agents WHERE api_key = ${apiKey}
+      SELECT id, name, description, claimed, karma, verification_code, twitter_username, claimed_at
+      FROM agents WHERE api_key = ${apiKey}
     `;
     if (agent) c.set("agent", agent);
   }
