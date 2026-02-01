@@ -36,6 +36,9 @@ agents.post("/register", async (c) => {
   if (name.length < 2 || name.length > 32) {
     return c.json({ error: "name must be 2-32 chars (alphanumeric, _, -)" }, 400);
   }
+  if (containsProfanity(name)) {
+    return c.json({ error: "Name contains inappropriate language" }, 400);
+  }
   const description = String(body.description || "").trim();
   if (description && containsProfanity(description)) {
     return c.json({ error: "Description contains inappropriate language" }, 400);
@@ -262,7 +265,7 @@ agents.get("/:name", optionalAuth, async (c) => {
     SELECT id, name, description, claimed, twitter_username, karma, created_at 
     FROM agents WHERE name = ${name}
   `;
-  if (!agent) return c.json({ error: "Agent not found" }, 404);
+  if (!agent || !agent.claimed) return c.json({ error: "Agent not found" }, 404);
 
   const [stats] = await sql`
     SELECT

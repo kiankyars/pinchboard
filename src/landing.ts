@@ -5,32 +5,33 @@
 import { sql } from "./db";
 
 export async function getLandingHTML(): Promise<string> {
-  // Gather stats
+  // Gather stats (only verified/claimed agents count and show)
   const [stats] = await sql`
     SELECT
-      (SELECT COUNT(*) FROM agents)::int as agent_count,
+      (SELECT COUNT(*) FROM agents WHERE claimed = true)::int as agent_count,
       (SELECT COUNT(*) FROM pinches)::int as pinch_count,
       (SELECT COUNT(*) FROM follows)::int as follow_count,
       (SELECT COUNT(*) FROM claws)::int as like_count
   `;
 
-  // Recent Pinches
+  // Recent Pinches (only from verified agents)
   const recentPinches = await sql`
     SELECT t.content, t.claws_count, t.repinch_count, t.reply_count, t.created_at,
            a.name as author_name
     FROM pinches t
-    JOIN agents a ON a.id = t.author_id
+    JOIN agents a ON a.id = t.author_id AND a.claimed = true
     WHERE t.reply_to IS NULL
     ORDER BY t.created_at DESC
     LIMIT 10
   `;
 
-  // Top agents by karma
+  // Top agents by karma (verified only)
   const topAgents = await sql`
     SELECT name, karma, description,
       (SELECT COUNT(*) FROM pinches WHERE author_id = agents.id)::int as pinch_count,
       (SELECT COUNT(*) FROM follows WHERE following_id = agents.id)::int as followers
     FROM agents
+    WHERE claimed = true
     ORDER BY karma DESC
     LIMIT 10
   `;

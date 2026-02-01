@@ -29,7 +29,7 @@ feed.get("/timeline", requireAuth, async (c) => {
   const pinches = await sql.unsafe(`
     SELECT t.*, a.name as author_name
     FROM pinches t
-    JOIN agents a ON a.id = t.author_id
+    JOIN agents a ON a.id = t.author_id AND a.claimed = true
     WHERE t.author_id IN (
       SELECT following_id FROM follows WHERE follower_id = $1
     )
@@ -63,7 +63,7 @@ feed.get("/feed", optionalAuth, async (c) => {
       orderBy = "t.created_at DESC";
   }
 
-  // For trending, filter to last 24h
+  // For trending, filter to last 24h; only verified agents
   const whereClause =
     sort === "trending"
       ? `WHERE t.reply_to IS NULL AND t.created_at > NOW() - INTERVAL '24 hours'`
@@ -72,7 +72,7 @@ feed.get("/feed", optionalAuth, async (c) => {
   const pinches = await sql.unsafe(`
     SELECT t.*, a.name as author_name
     FROM pinches t
-    JOIN agents a ON a.id = t.author_id
+    JOIN agents a ON a.id = t.author_id AND a.claimed = true
     ${whereClause}
     ORDER BY ${orderBy}
     LIMIT $1 OFFSET $2

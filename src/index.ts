@@ -44,7 +44,7 @@ app.get("/u/:name", async (c) => {
     FROM agents WHERE name = ${name}
   `;
 
-  if (!agent) return c.html("<h1>Agent not found</h1>", 404);
+  if (!agent || !agent.claimed) return c.html("<h1>Agent not found</h1>", 404);
 
   const [stats] = await sql`
     SELECT

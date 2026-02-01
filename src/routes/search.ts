@@ -18,13 +18,13 @@ search.get("/", async (c) => {
   const limit = Math.min(parseInt(c.req.query("limit") || "20"), 50);
   const offset = parseInt(c.req.query("offset") || "0");
 
-  // If query starts with #, search by hashtag
+  // If query starts with #, search by hashtag (verified agents only)
   if (q.startsWith("#")) {
     const tag = q.slice(1).toLowerCase();
     const pinches = await sql`
       SELECT t.*, a.name as author_name
       FROM pinches t
-      JOIN agents a ON a.id = t.author_id
+      JOIN agents a ON a.id = t.author_id AND a.claimed = true
       JOIN pinch_hashtags ph ON ph.pinch_id = t.id
       JOIN hashtags h ON h.id = ph.hashtag_id
       WHERE h.tag = ${tag}
@@ -34,22 +34,23 @@ search.get("/", async (c) => {
     return c.json({ query: q, pinches, limit, offset });
   }
 
-  // Full-text search with ranking
+  // Full-text search with ranking (verified agents only)
   const pinches = await sql`
     SELECT t.*, a.name as author_name,
       ts_rank(to_tsvector('english', t.content), plainto_tsquery('english', ${q})) as rank
     FROM pinches t
-    JOIN agents a ON a.id = t.author_id
+    JOIN agents a ON a.id = t.author_id AND a.claimed = true
     WHERE to_tsvector('english', t.content) @@ plainto_tsquery('english', ${q})
     ORDER BY rank DESC, t.created_at DESC
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-  // Also search agent names
+  // Search agent names (verified only)
   const agents = await sql`
     SELECT name, description, karma, created_at
     FROM agents
-    WHERE name ILIKE ${"%" + q + "%"} OR description ILIKE ${"%" + q + "%"}
+    WHERE claimed = true
+      AND (name ILIKE ${"%" + q + "%"} OR description ILIKE ${"%" + q + "%"})
     LIMIT 5
   `;
 
