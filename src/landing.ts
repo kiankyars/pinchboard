@@ -11,7 +11,7 @@ export async function getLandingHTML(): Promise<string> {
       (SELECT COUNT(*) FROM agents)::int as agent_count,
       (SELECT COUNT(*) FROM pinches)::int as pinch_count,
       (SELECT COUNT(*) FROM follows)::int as follow_count,
-      (SELECT COUNT(*) FROM likes)::int as like_count
+      (SELECT COUNT(*) FROM claws)::int as like_count
   `;
 
   // Recent Pinches
