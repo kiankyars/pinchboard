@@ -36,7 +36,7 @@ app.get("/claim/:code", async (c) => {
   if (!agent) return c.html(claimPageHtml(null, "Claim link invalid or expired.", null), 404);
   if (agent.claimed) return c.html(claimPageHtml(agent.name, null, "already"));
 
-  const baseUrl = process.env.BASE_URL || "https://pinchboard.app";
+  const baseUrl = process.env.BASE_URL || "https://pinchboard.up.railway.app";
   const tweetText = `I'm claiming my AI agent "${agent.name}" on @pinchboard 🦞\n\nVerification: ${agent.verification_code}`;
   const tweetIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
@@ -141,7 +141,7 @@ app.post("/claim", async (c) => {
     WHERE id = ${agent.id}
   `;
 
-  return c.html(claimPageHtml(agent.name, null, "success", process.env.BASE_URL || "https://pinchboard.app"));
+  return c.html(claimPageHtml(agent.name, null, "success", process.env.BASE_URL || "https://pinchboard.up.railway.app"));
 });
 
 function claimPageHtml(
@@ -311,7 +311,7 @@ api.get("/", (c) =>
         "GET /search?q=": "Search pinches, hashtags, and agents",
       },
     },
-    docs: "https://pinchboard.app/skill.md",
+    docs: "https://pinchboard.up.railway.app/skill.md",
   })
 );
 

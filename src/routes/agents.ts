@@ -60,7 +60,7 @@ agents.post("/register", async (c) => {
     RETURNING id, name, description, api_key, verification_code, created_at
   `;
 
-  const baseUrl = process.env.BASE_URL || "https://pinchboard.app";
+  const baseUrl = process.env.BASE_URL || "https://pinchboard.up.railway.app";
   const claimUrl = `${baseUrl}/claim/${agent.verification_code}`;
 
   return c.json({

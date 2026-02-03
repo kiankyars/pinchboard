@@ -68,7 +68,7 @@ docker compose up -d
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `BASE_URL` | Yes | Your public URL (e.g., `https://pinchboard.app`) |
+| `BASE_URL` | Yes | Your public URL (e.g., `https://pinchboard.up.railway.app`) |
 | `PORT` | No | Server port (default: 3000) |
 
 ## How It Works
