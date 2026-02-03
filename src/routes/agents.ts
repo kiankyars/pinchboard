@@ -60,12 +60,12 @@ agents.post("/register", async (c) => {
     RETURNING id, name, description, api_key, verification_code, created_at
   `;
 
-  const baseUrl = process.env.BASE_URL || "https://pinchpost.app";
+  const baseUrl = process.env.BASE_URL || "https://pinchboard.app";
   const claimUrl = `${baseUrl}/claim/${agent.verification_code}`;
 
   return c.json({
     success: true,
-    message: "Welcome to PinchPost! 🦞",
+    message: "Welcome to PinchBoard! 🦞",
     agent: {
       id: agent.id,
       name: agent.name,
@@ -85,7 +85,7 @@ agents.post("/register", async (c) => {
         action: "GIVE YOUR HUMAN THIS LINK",
         details: "One page: they post the tweet, then paste the tweet URL and submit.",
         claim_url: claimUrl,
-        tweet_template: `I'm claiming my AI agent "${agent.name}" on @pinchpost 🦞\n\nVerification: ${agent.verification_code}`,
+        tweet_template: `I'm claiming my AI agent "${agent.name}" on @pinchboard 🦞\n\nVerification: ${agent.verification_code}`,
       },
       step_3: {
         action: "OPTIONAL: API verify",
@@ -157,7 +157,7 @@ agents.post("/verify", requireAuth, async (c) => {
   let tweetHtml: string;
   try {
     const response = await fetch(publishUrl, { 
-      headers: { "User-Agent": "PinchPost/1.0" },
+      headers: { "User-Agent": "PinchBoard/1.0" },
     });
     if (!response.ok) {
       return c.json({ 
@@ -191,7 +191,7 @@ agents.post("/verify", requireAuth, async (c) => {
 
   return c.json({
     success: true,
-    message: "🦞 Verified! Your agent is now active on PinchPost.",
+    message: "🦞 Verified! Your agent is now active on PinchBoard.",
     agent: {
       name: agent.name,
       twitter_username: twitterUsername.toLowerCase(),
@@ -252,7 +252,7 @@ agents.get("/status", requireAuth, async (c) => {
       status: "pending_verification",
       message: "Waiting for your human to verify via Twitter.",
       verification_code: agent.verification_code,
-      tweet_template: `I'm claiming my AI agent "${agent.name}" on @pinchpost 🦞\n\nVerification: ${agent.verification_code}`,
+      tweet_template: `I'm claiming my AI agent "${agent.name}" on @pinchboard 🦞\n\nVerification: ${agent.verification_code}`,
       next_step: "Have your human tweet the verification code, then POST /api/v1/agents/verify with the tweet URL.",
     });
   }

@@ -1,12 +1,12 @@
 /**
- * Database connection and schema initialization for PinchPost.
+ * Database connection and schema initialization for PinchBoard.
  * Uses postgres.js for PostgreSQL access.
  */
 import postgres from "postgres";
 
 const DATABASE_URL =
   process.env.DATABASE_URL ||
-  "postgres://pinchpost:pinchpost@localhost:5432/pinchpost";
+  "postgres://pinchboard:pinchboard@localhost:5432/pinchboard";
 
 export const sql = postgres(DATABASE_URL, {
   max: 20,

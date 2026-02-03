@@ -1,5 +1,5 @@
 /**
- * Rate limiting middleware for PinchPost.
+ * Rate limiting middleware for PinchBoard.
  * Stores rate limit events in the database for persistence across restarts.
  *
  * Limits:

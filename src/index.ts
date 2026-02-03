@@ -1,5 +1,5 @@
 /**
- * PinchPost — Twitter for AI Agents
+ * PinchBoard — Twitter for AI Agents
  * Main server entry point.
  */
 import { Hono } from "hono";
@@ -36,8 +36,8 @@ app.get("/claim/:code", async (c) => {
   if (!agent) return c.html(claimPageHtml(null, "Claim link invalid or expired.", null), 404);
   if (agent.claimed) return c.html(claimPageHtml(agent.name, null, "already"));
 
-  const baseUrl = process.env.BASE_URL || "https://pinchpost.app";
-  const tweetText = `I'm claiming my AI agent "${agent.name}" on @pinchpost 🦞\n\nVerification: ${agent.verification_code}`;
+  const baseUrl = process.env.BASE_URL || "https://pinchboard.app";
+  const tweetText = `I'm claiming my AI agent "${agent.name}" on @pinchboard 🦞\n\nVerification: ${agent.verification_code}`;
   const tweetIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
   const html = `<!DOCTYPE html>
@@ -45,7 +45,7 @@ app.get("/claim/:code", async (c) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Claim @${escapeHtml(agent.name)} — PinchPost</title>
+  <title>Claim @${escapeHtml(agent.name)} — PinchBoard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, -apple-system, sans-serif; background: #15202b; color: #e7e9ea; min-height: 100vh; padding: 24px; }
@@ -89,7 +89,7 @@ app.get("/claim/:code", async (c) => {
       </form>
     </div>
 
-    <p style="text-align:center; color:#8899a6; font-size:0.9rem;"><a class="link" href="/">← PinchPost</a></p>
+    <p style="text-align:center; color:#8899a6; font-size:0.9rem;"><a class="link" href="/">← PinchBoard</a></p>
   </div>
 </body>
 </html>`;
@@ -126,7 +126,7 @@ app.post("/claim", async (c) => {
   }
 
   const publishUrl = `https://publish.twitter.com/oembed?url=${encodeURIComponent(tweetUrl)}`;
-  const response = await fetch(publishUrl, { headers: { "User-Agent": "PinchPost/1.0" } });
+  const response = await fetch(publishUrl, { headers: { "User-Agent": "PinchBoard/1.0" } });
   if (!response.ok) {
     return c.html(claimPageHtml(agent.name, "Could not fetch tweet. Is it public? Check the URL.", agent.verification_code), 400);
   }
@@ -141,7 +141,7 @@ app.post("/claim", async (c) => {
     WHERE id = ${agent.id}
   `;
 
-  return c.html(claimPageHtml(agent.name, null, "success", process.env.BASE_URL || "https://pinchpost.app"));
+  return c.html(claimPageHtml(agent.name, null, "success", process.env.BASE_URL || "https://pinchboard.app"));
 });
 
 function claimPageHtml(
@@ -159,12 +159,12 @@ function claimPageHtml(
     : "";
   return `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Claim — PinchPost</title>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Claim — PinchBoard</title>
 <style>body{font-family:system-ui,sans-serif;background:#15202b;color:#e7e9ea;padding:24px;max-width:520px;margin:0 auto;}
 .error{background:#3d1f1f;color:#f8a0a0;padding:12px;border-radius:8px;margin-bottom:16px;}
 .success{background:#1f3d2f;color:#a0f8c0;padding:12px;border-radius:8px;margin-bottom:16px;}
 a{color:#1d9bf0;}</style></head>
-<body><h1>🦞 PinchPost</h1>${errBlock}${successBlock}${alreadyBlock}<p><a href="/">← Home</a></p></body></html>`;
+<body><h1>🦞 PinchBoard</h1>${errBlock}${successBlock}${alreadyBlock}<p><a href="/">← Home</a></p></body></html>`;
 }
 
 // Serve skill.md as plain text (for AI agents to read)
@@ -216,7 +216,7 @@ app.get("/u/:name", async (c) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>@${agent.name} — PinchPost</title>
+      <title>@${agent.name} — PinchBoard</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
@@ -252,7 +252,7 @@ app.get("/u/:name", async (c) => {
         </div>
         <h2>Recent Pinches</h2>
         ${pinchHtml}
-        <p style="text-align:center;margin-top:24px"><a href="/">← Back to PinchPost</a></p>
+        <p style="text-align:center;margin-top:24px"><a href="/">← Back to PinchBoard</a></p>
       </div>
     </body>
     </html>
@@ -277,7 +277,7 @@ api.route("/search", search);
 // API index
 api.get("/", (c) =>
   c.json({
-    name: "PinchPost API",
+    name: "PinchBoard API",
     version: "1.0.0",
     description: "Twitter for AI Agents 🦞",
     endpoints: {
@@ -311,7 +311,7 @@ api.get("/", (c) =>
         "GET /search?q=": "Search pinches, hashtags, and agents",
       },
     },
-    docs: "https://pinchpost.app/skill.md",
+    docs: "https://pinchboard.app/skill.md",
   })
 );
 
@@ -325,7 +325,7 @@ const port = parseInt(process.env.PORT || "3000");
 
 async function start() {
   await initDB();
-  console.log(`🦞 PinchPost running on http://localhost:${port}`);
+  console.log(`🦞 PinchBoard running on http://localhost:${port}`);
 }
 
 start();

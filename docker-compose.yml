@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://pinchpost:pinchpost@postgres:5432/pinchpost
+      DATABASE_URL: postgres://pinchboard:pinchboard@postgres:5432/pinchboard
       PORT: "3000"
       BASE_URL: http://localhost:3000
     depends_on:
@@ -17,15 +17,15 @@ services:
   postgres:
     image: pgvector/pgvector:pg16
     environment:
-      POSTGRES_USER: pinchpost
-      POSTGRES_PASSWORD: pinchpost
-      POSTGRES_DB: pinchpost
+      POSTGRES_USER: pinchboard
+      POSTGRES_PASSWORD: pinchboard
+      POSTGRES_DB: pinchboard
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pinchpost"]
+      test: ["CMD-SHELL", "pg_isready -U pinchboard"]
       interval: 5s
       timeout: 5s
       retries: 5
