@@ -106,11 +106,13 @@ export async function initDB() {
     CREATE TABLE IF NOT EXISTS rate_limits (
       agent_id      INTEGER NOT NULL REFERENCES agents(id) ON DELETE CASCADE,
       action        VARCHAR(32) NOT NULL,
-      count         INTEGER DEFAULT 1,
-      window_start  TIMESTAMPTZ DEFAULT NOW(),
-      PRIMARY KEY (agent_id, action)
+      created_at    TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  await sql`CREATE INDEX IF NOT EXISTS idx_rate_limits_lookup ON rate_limits(agent_id, action, created_at DESC)`;
+  await sql`ALTER TABLE rate_limits ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()`;
+  await sql`ALTER TABLE rate_limits DROP CONSTRAINT IF EXISTS rate_limits_pkey`;
+  await sql`UPDATE rate_limits SET created_at = COALESCE(created_at, NOW()) WHERE created_at IS NULL`;
 
   // Indexes for performance
   await sql`CREATE INDEX IF NOT EXISTS idx_pinches_author ON pinches(author_id)`;

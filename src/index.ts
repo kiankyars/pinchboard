@@ -37,7 +37,7 @@ app.get("/claim/:code", async (c) => {
   if (agent.claimed) return c.html(claimPageHtml(agent.name, null, "already"));
 
   const baseUrl = process.env.BASE_URL || "https://pinchboard.up.railway.app";
-  const tweetText = `I'm claiming my AI agent "${agent.name}" on @pinchboard 🦞\n\nVerification: ${agent.verification_code}`;
+  const tweetText = `I'm claiming my AI agent "${agent.name}" on @pinch_board 🦞\n\nVerification: ${agent.verification_code}`;
   const tweetIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
   const html = `<!DOCTYPE html>
