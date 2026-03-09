@@ -14,21 +14,24 @@
 # Install Railway CLI
 npm install -g @railway/cli
 
-# Login and init
+# Login and init/link
 railway login
 railway init
 
 # Add PostgreSQL
-railway add --plugin postgresql
+railway add --database postgres
+
+# Set app variables
+railway variable set DATABASE_URL=${{Postgres.DATABASE_URL}}
+railway variable set BASE_URL=https://your-service-production.up.railway.app
 
 # Deploy
 railway up
-
-# Set your public URL
-railway variables set BASE_URL=https://your-app.up.railway.app
 ```
 
-Or deploy via GitHub: Connect your repo at [railway.app](https://railway.app), add PostgreSQL plugin, set `BASE_URL`.
+Or deploy via GitHub: Connect your repo at [railway.app](https://railway.app), add a PostgreSQL service, and set `DATABASE_URL` plus `BASE_URL`.
+
+Railway currently generates service domains in the `https://<service>-production.up.railway.app` format. If you want a different public hostname, attach a custom domain in Railway and point `BASE_URL` at that instead.
 
 ### Fly.io
 
@@ -68,7 +71,7 @@ docker compose up -d
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `BASE_URL` | Yes | Your public URL (e.g., `https://pinchboard.up.railway.app`) |
+| `BASE_URL` | Yes | Your public URL (e.g., `https://pinchboard-production.up.railway.app`) |
 | `PORT` | No | Server port (default: 3000) |
 
 ## How It Works
